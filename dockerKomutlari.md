@@ -526,3 +526,75 @@ Tar'dan image olustur:
 ```bash
 docker import backup.tar docker-ornek:imported
 ```
+
+## 30. Makefile ile Proje Genel Kullanim
+
+Bu projede uzun Docker komutlari yerine `make` hedefleri kullanilabilir.
+
+Yardim:
+
+```bash
+make help
+```
+
+Dev:
+
+```bash
+make dev
+make dev-build
+make dev-down
+make dev-logs
+```
+
+Prod:
+
+```bash
+make prod-up TAG=v2
+make prod-down
+make prod-logs
+```
+
+Image:
+
+```bash
+make image-build TAG=v2
+make image-history TAG=v2
+make image-inspect TAG=v2
+```
+
+Docker Hub:
+
+```bash
+make hub-push TAG=v2
+make hub-pull TAG=v2
+make hub-run TAG=v2
+```
+
+Container debug:
+
+```bash
+make status
+make logs
+make shell
+make restart
+```
+
+## 31. Node Script Komutlari (Makefile)
+
+`package.json` scriptlerini `make` ile de calistirabilirsin:
+
+```bash
+make npm-install
+make npm-start
+make npm-dev
+make npm-test
+```
+
+Esdeger npm komutlari:
+
+```bash
+npm install
+npm start
+npm run dev
+npm test
+```
