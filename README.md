@@ -1,52 +1,60 @@
-# Docker Notes
+# Mongo Form App
 
-Bu repo, Docker ogrenme notlarini ve pratik komut orneklerini icerir.
+Docker ile calisan basit bir `Node.js + Express + MongoDB` form uygulamasi.
 
-## Ana Dokuman
+## API
 
-Detayli komutlar ve aciklamalar burada:
+- `GET /` -> HTML form arayuzu
+- `GET /api/health` -> servis ve Mongo baglanti durumu
+- `GET /api/forms` -> kayitli formlari listeler
+- `POST /api/forms` -> yeni form kaydi olusturur
 
-- [dockerKomutlari.md](dockerKomutlari.md)
+## Proje Yapisi
 
-## Hedef
+- `app.js` -> Express API ve MongoDB baglantisi
+- `public/index.html` -> form UI
+- `docker/compose/dev.yml` -> development stack
+- `docker/compose/prod.yml` -> production stack
+- `docker/dev/Dockerfile` -> development image
+- `docker/prod/Dockerfile` -> production image
+- `Makefile` -> tek komutla calistirma/test hedefleri
 
-- Docker image/container yonetimi
-- Dockerfile ve Docker Compose kullanimi
-- Dev/Prod ayrimi
-- Docker Hub push/pull sureci
-- Troubleshooting ve best practices
+## Ortam Degiskenleri
 
-## Hizli Baslangic
+`.env.example` dosyasini kopyalayip `.env` olustur:
 
 ```bash
-# Dev
-docker compose -f docker/compose/dev.yml up -d --build
-
-# Prod
-docker compose -f docker/compose/prod.yml up -d --build
+cp .env.example .env
 ```
 
-## Makefile ile Kisa Kullanim
+Varsayilan degerler:
 
-Tek komutla proje operasyonlari:
+```env
+PORT=3001
+MONGO_URI=mongodb://localhost:27017/form_app_db
+MONGO_DB_NAME=form_app_db
+MONGO_COLLECTION=forms
+```
+
+Docker Compose icinde `MONGO_URI`, servis ismi kullanacak sekilde otomatik olarak `mongodb://mongo:27017/<MONGO_DB_NAME>` degerine cekilir.
+
+## Lokal Calistirma
 
 ```bash
-# yardim
-make help
+npm install
+npm start
+```
 
-# node scripts
-make npm-install
-make npm-start
-make npm-dev
+## Docker ile Calistirma
 
-# dev
-make dev-build
-make dev-logs
+```bash
+make dev
+make prod
+make stop
+```
 
-# prod
-make prod-up TAG=v2
-make prod-logs
+## Test Icin Ornek Istek
 
-# docker hub
-make hub-push TAG=v2
+```bash
+make test-post
 ```

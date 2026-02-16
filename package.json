@@ -1,20 +1,21 @@
 {
-  "name": "docker-ornek",
+  "name": "mongo-form-app",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
     "dev": "nodemon --legacy-watch app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Dockerized Node.js + Express + MongoDB form app",
   "devDependencies": {
     "nodemon": "^3.1.0"
   },
   "dependencies": {
-    "dotenv": "^17.2.4"
+    "dotenv": "^17.2.4",
+    "express": "^5.2.1",
+    "mongodb": "^7.1.0"
   }
 }

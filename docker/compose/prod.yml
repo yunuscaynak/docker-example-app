@@ -1,10 +1,32 @@
 services:
   app:
+    restart: unless-stopped
     build:
-      context: .
+      context: ../..
       dockerfile: docker/prod/Dockerfile
+    depends_on:
+      mongo:
+        condition: service_healthy
     ports:
-      - "3001:3001"
+      - "${PORT:-3001}:3001"
     environment:
-      - NODE_ENV=production
-      - PORT=3001
+      NODE_ENV: production
+      PORT: ${PORT:-3001}
+      MONGO_DB_NAME: ${MONGO_DB_NAME:-form_app_db}
+      MONGO_COLLECTION: ${MONGO_COLLECTION:-forms}
+      MONGO_URI: mongodb://mongo:27017/${MONGO_DB_NAME:-form_app_db}
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  mongo_data:

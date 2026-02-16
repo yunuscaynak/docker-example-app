@@ -1,18 +1,40 @@
 services:
   app:
+    restart: unless-stopped
     build:
-      context: .
+      context: ../..
       dockerfile: docker/dev/Dockerfile
+    depends_on:
+      mongo:
+        condition: service_healthy
     ports:
-      - "3001:3001"
+      - "${PORT:-3001}:3001"
     volumes:
-      - .:/app
+      - ../..:/app
       - node_modules:/app/node_modules
     environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-      - PORT=3001
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: "true"
+      PORT: ${PORT:-3001}
+      MONGO_DB_NAME: ${MONGO_DB_NAME:-form_app_db}
+      MONGO_COLLECTION: ${MONGO_COLLECTION:-forms}
+      MONGO_URI: mongodb://mongo:27017/${MONGO_DB_NAME:-form_app_db}
     command: sh -c "npm install && npm run dev"
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   node_modules:
+  mongo_data:
